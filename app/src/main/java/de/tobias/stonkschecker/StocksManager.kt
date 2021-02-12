@@ -7,7 +7,7 @@ import com.android.volley.RequestQueue
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 
-class StocksRetriever(context: Context) {
+class StocksManager(context: Context) {
     val queue : RequestQueue
 
     init {
@@ -17,6 +17,7 @@ class StocksRetriever(context: Context) {
 
     fun getStockInfo(stockName: String): Unit {
         //Example response https://www.bloomberg.com/markets/api/bulk-time-series/price/GME%3AUS?timeFrame=1_DAY
+        //Search https://search.bloomberg.com/lookup.json?types=Company_Public,Index,Fund,Currency,Commodity,Bond,Person,Author,Topic&exclude_subtypes=label:editorial&group_size=3,3,3,3,3,3,3,3,6&fields=name,slug,ticker_symbol,url,organization,title,primary_site&highlight=1&query=GameStop
         val url = "https://www.bloomberg.com/markets/api/bulk-time-series/price/$stockName%3AUS?timeFrame=1_DAY";
 
         val stockRequest = StringRequest(
