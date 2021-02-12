@@ -8,7 +8,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val stocksRetriever = StocksRetriever(this)
-        stocksRetriever.getStockInfo("GME")
+        val stocksManager = StocksManager(this)
+        stocksManager.getStockInfo("GME")
     }
 }
