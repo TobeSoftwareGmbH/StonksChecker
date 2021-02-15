@@ -3,17 +3,15 @@ package de.tobias.stonkschecker.stocks
 import org.json.JSONArray
 import org.json.JSONObject
 
-class Stock (name: String, historicStockData: List<HistoricStockData>, previousClosingPriceOneTradingDayAgo: Double, lastPrice: Double) {
-    val historicStockData: List<HistoricStockData> = historicStockData
-    val name: String = name
-
-    val previousClosingPriceOneTradingDayAgo: Double = previousClosingPriceOneTradingDayAgo
-    val lastPrice: Double = lastPrice
+class Stock (
+    val name: String, val historicStockData: List<HistoricStockData>,
+    val previousClosingPriceOneTradingDayAgo: Double, val lastPrice: Double
+) {
 
     companion object {
-        val STONKS = 1
-        val NOT_STONKS = -1
-        val CONFUSED_STONKS = 0
+        const val STONKS = 1
+        const val NOT_STONKS = -1
+        const val CONFUSED_STONKS = 0
 
         fun getStockData(jsonArray: JSONArray) : Stock {
             val stockData: JSONObject = jsonArray.getJSONObject(0);
