@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import de.tobias.stonkschecker.network.NetworkCallback
 import de.tobias.stonkschecker.network.NetworkManager
-import de.tobias.stonkschecker.stocks.Stock
+import de.tobias.stonkschecker.search.SearchResults
 import org.json.JSONArray
 
 class MainActivity : AppCompatActivity() {
@@ -13,12 +13,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val networkManager = NetworkManager(this)
-        networkManager.getJSONResponse(NetworkManager.getStockURL("GME:US"), ValueReturn())
+        networkManager.getJSONResponse(NetworkManager.getSearchURL("GameStop"), ValueReturn())
     }
 
     class ValueReturn: NetworkCallback {
         override fun onFinished(jsonArray: JSONArray) {
-            Stock.getStockData(jsonArray)
+            SearchResults.parseSearchResponse(jsonArray).toString()
+
         }
     }
 }
