@@ -7,7 +7,7 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONArray
 
-class StocksManager(context: Context) {
+class NetworkManager(context: Context) {
     val queue : RequestQueue
 
     init {
