@@ -8,11 +8,7 @@ import com.android.volley.toolbox.Volley
 import org.json.JSONArray
 
 class NetworkManager(context: Context) {
-    val queue : RequestQueue
-
-    init {
-        queue = Volley.newRequestQueue(context)
-    }
+    val queue : RequestQueue = Volley.newRequestQueue(context)
 
     companion object {
         fun getSearchURL(query: String): String {
@@ -32,9 +28,10 @@ class NetworkManager(context: Context) {
             { response ->
                 networkCallback.onFinished(JSONArray(response))
             },
-            { error -> networkCallback.onError(error) })
+            { error -> TODO("ExceptionHandler not implemented") })
 
         queue.add(stockRequest)
         return networkCallback
     }
+
 }
