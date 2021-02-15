@@ -5,8 +5,11 @@ import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
+import android.widget.TextView
 import de.tobias.stonkschecker.R
 
 /**
@@ -14,12 +17,12 @@ import de.tobias.stonkschecker.R
  */
 class StocksStonksWidgetConfigureActivity : Activity() {
     private var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
-    private lateinit var appWidgetText: EditText
+    private lateinit var widgetStockName: EditText
     private var onClickListener = View.OnClickListener {
         val context = this@StocksStonksWidgetConfigureActivity
 
         // When the button is clicked, store the string locally
-        val widgetText = appWidgetText.text.toString()
+        val widgetText = widgetStockName.text.toString()
         saveTitlePref(context, appWidgetId, widgetText)
 
         // It is the responsibility of the configuration activity to update the app widget
@@ -41,7 +44,14 @@ class StocksStonksWidgetConfigureActivity : Activity() {
         setResult(RESULT_CANCELED)
 
         setContentView(R.layout.stocks_stonks_widget_configure)
-        appWidgetText = findViewById<View>(R.id.appwidget_text) as EditText
+        widgetStockName = findViewById<View>(R.id.appwidget_text) as EditText
+        widgetStockName.setOnEditorActionListener(TextView.OnEditorActionListener()
+            { textView: TextView, actionid: Int, keyEvent: KeyEvent ->
+                if(actionid == EditorInfo.IME_ACTION_SEARCH) {
+                    TODO()
+                }
+                return@OnEditorActionListener false
+            })
         findViewById<View>(R.id.add_button).setOnClickListener(onClickListener)
 
         // Find the widget id from the intent.
