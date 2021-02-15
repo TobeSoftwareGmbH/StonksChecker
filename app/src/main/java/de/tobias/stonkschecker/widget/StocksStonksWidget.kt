@@ -1,4 +1,4 @@
-package de.tobias.stonkschecker
+package de.tobias.stonkschecker.widget
 
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider

@@ -2,6 +2,7 @@ package de.tobias.stonkschecker
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import de.tobias.stonkschecker.network.StocksManager
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -9,6 +10,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val stocksManager = StocksManager(this)
-        stocksManager.getStockInfo("GME")
+        stocksManager.getJSONResponse(stocksManager.getStockURL("GME:US"))
     }
 }

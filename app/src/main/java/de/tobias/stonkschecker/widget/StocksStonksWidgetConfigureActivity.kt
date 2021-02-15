@@ -1,4 +1,4 @@
-package de.tobias.stonkschecker
+package de.tobias.stonkschecker.widget
 
 import android.app.Activity
 import android.appwidget.AppWidgetManager
@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
+import de.tobias.stonkschecker.R
 
 /**
  * The configuration screen for the [StocksStonksWidget] AppWidget.
