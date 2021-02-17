@@ -8,11 +8,11 @@ import com.android.volley.toolbox.Volley
 import org.json.JSONArray
 
 class NetworkManager(context: Context) {
-    val queue : RequestQueue = Volley.newRequestQueue(context)
+    private val queue : RequestQueue = Volley.newRequestQueue(context)
 
     companion object {
         fun getSearchURL(query: String): String {
-            return "https://search.bloomberg.com/lookup.json?types=Company_Public,Index,Fund,Currency,Commodity,Bond,Person,Author,Topic&exclude_subtypes=label:editorial&group_size=3,3,3,3,3,3,3,3,6&fields=name,slug,ticker_symbol,url,organization,title,primary_site&highlight=1&query=$query"
+            return "https://search.bloomberg.com/lookup.json?types=Company_Public,Index,Fund,Currency,Commodity,Bond&exclude_subtypes=label:editorial&group_size=3,3,3,3,3,3,3,3,6&fields=name,slug,ticker_symbol,url,organization,title,primary_site&highlight=1&query=$query"
         }
 
         fun getStockURL(stockName: String): String {
