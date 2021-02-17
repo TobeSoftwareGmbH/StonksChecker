@@ -10,14 +10,26 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import de.tobias.stonkschecker.R
+import de.tobias.stonkschecker.adapters.SearchResultRecyclerViewAdapter
+import de.tobias.stonkschecker.network.NetworkCallback
+import de.tobias.stonkschecker.network.NetworkManager
+import de.tobias.stonkschecker.search.SearchResults
+import org.json.JSONArray
+
 
 /**
  * The configuration screen for the [StocksStonksWidget] AppWidget.
  */
 class StocksStonksWidgetConfigureActivity : Activity() {
     private var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
+
     private lateinit var widgetStockName: EditText
+    val searchResultRecyclerViewAdapter: SearchResultRecyclerViewAdapter = SearchResultRecyclerViewAdapter()
+
+
     private var onClickListener = View.OnClickListener {
         val context = this@StocksStonksWidgetConfigureActivity
 
@@ -36,6 +48,8 @@ class StocksStonksWidgetConfigureActivity : Activity() {
         finish()
     }
 
+
+
     public override fun onCreate(icicle: Bundle?) {
         super.onCreate(icicle)
 
@@ -44,14 +58,6 @@ class StocksStonksWidgetConfigureActivity : Activity() {
         setResult(RESULT_CANCELED)
 
         setContentView(R.layout.stocks_stonks_widget_configure)
-        widgetStockName = findViewById<View>(R.id.appwidget_text) as EditText
-        widgetStockName.setOnEditorActionListener(TextView.OnEditorActionListener()
-            { textView: TextView, actionid: Int, keyEvent: KeyEvent ->
-                if(actionid == EditorInfo.IME_ACTION_SEARCH) {
-                    TODO()
-                }
-                return@OnEditorActionListener false
-            })
         findViewById<View>(R.id.add_button).setOnClickListener(onClickListener)
 
         // Find the widget id from the intent.
@@ -72,6 +78,40 @@ class StocksStonksWidgetConfigureActivity : Activity() {
         //appWidgetText.setText(loadTitlePref(this@StocksStonksWidgetConfigureActivity, appWidgetId))
     }
 
+    override fun onStart() {
+        super.onStart()
+
+        val recyclerView : RecyclerView = findViewById(R.id.searchResultList)
+        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        recyclerView.layoutManager = layoutManager
+        recyclerView.adapter = searchResultRecyclerViewAdapter
+
+        val networkManager : NetworkManager = NetworkManager(this)
+
+        widgetStockName = findViewById<View>(R.id.appwidget_text) as EditText
+        widgetStockName.setOnEditorActionListener(TextView.OnEditorActionListener()
+        { textview: TextView, actionId: Int, keyevent: KeyEvent? ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                networkManager.getJSONResponse(
+                    NetworkManager.getSearchURL(widgetStockName.text.toString()),
+                    SearchReturnValues()
+                )
+            }
+            return@OnEditorActionListener false
+        })
+    }
+
+}
+
+internal class SearchReturnValues: NetworkCallback {
+    override fun onFinished(jsonArray: JSONArray) {
+        //Log.v("RESULT", jsonArray.toString())
+        StocksStonksWidgetConfigureActivity().searchResultRecyclerViewAdapter.overrideSearchResults(
+            SearchResults.parseSearchResponse(
+                jsonArray
+            ).searchItems
+        )
+    }
 }
 
 private const val PREFS_NAME = "de.tobias.stonkschecker.StocksStonksWidget"
