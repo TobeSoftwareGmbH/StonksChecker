@@ -12,11 +12,6 @@ import de.tobias.stonkschecker.search.SearchResult
 class SearchResultRecyclerViewAdapter: RecyclerView.Adapter<SearchResultRecyclerViewAdapter.SearchResultViewHolder>() {
     private var results: ArrayList<SearchResult> = ArrayList()
 
-    init {
-        results.add(SearchResult("name", ",", 69420.0))
-        notifyDataSetChanged()
-    }
-
     class SearchResultViewHolder(view: View) :RecyclerView.ViewHolder(view) {
     }
 
