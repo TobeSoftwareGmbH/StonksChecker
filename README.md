@@ -3,6 +3,14 @@
  <h1 align="center">StonksChecker</h1>
  <p align="center">An Android App that changes the meme (Stonks, Not Stonks, Confused Stonks) of a widget depending on the state of the tracked stock. Absolutely perfect for successful investors and those who want to be.</p>
 </p>
+  <p align="center">
+    <a href="https://snyk.io/test/github/TobeSoftwareGmbH/StonksChecker?targetFile=app/build.gradle">
+        <img src="https://snyk.io/test/github/TobeSoftwareGmbH/StonksChecker/badge.svg?targetFile=app/build.gradle" alt="Known Vulnerabilities" data-canonical-src="https://snyk.io/test/github/TobeSoftwareGmbH/StonksChecker?targetFile=app/build.gradle" style="max-width:100%;">
+    </a>
+    <a href="https://codeclimate.com/github/TobeSoftwareGmbH/StonksChecker/maintainability">
+      <img src="https://api.codeclimate.com/v1/badges/08bc32d8a8dac2bc2910/maintainability" />
+    </a>
+  </p>
 
 # Screenshots
 <img src="/project-screenshots/widget_homescreen.png" width="20%"> <img src="/project-screenshots/widget_configuration.png" width="20%"> <img src="/project-screenshots/widget_homescreen_multiple.png" width="20%"> 
