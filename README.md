@@ -12,10 +12,10 @@
     </a>
   </p>
 
-# Screenshots
+## Screenshots
 <img src="/project-screenshots/widget_homescreen.png" width="20%"> <img src="/project-screenshots/widget_configuration.png" width="20%"> <img src="/project-screenshots/widget_homescreen_multiple.png" width="20%"> 
 
-# License and Attribution
+## License and Attribution
 - This project uses the following libraries:
   - <a href="https://github.com/google/volley">Volley</a>, licensed under the <a href="https://choosealicense.com/licenses/apache-2.0/">Apache-2.0 license</a>
 - This App queries <a href="https://www.bloomberg.com/markets">Bloomberg Markets</a> for Financial Data. This is neither supported nor endorsed by Bloomberg Markets.
