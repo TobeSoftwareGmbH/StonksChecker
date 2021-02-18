@@ -8,7 +8,9 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -90,9 +92,17 @@ class StocksStonksWidgetConfigureActivity : NetworkCallback, Activity() {
         val networkManager : NetworkManager = NetworkManager(this)
 
         widgetStockName = findViewById<View>(R.id.appwidget_text) as EditText
+        widgetStockName.requestFocus()
         widgetStockName.setOnEditorActionListener(TextView.OnEditorActionListener()
         { textview: TextView, actionId: Int, keyevent: KeyEvent? ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                //Hide the keyboard
+                hideKeyboard()
+
+                //Display Progressbar
+                (this.findViewById(R.id.progressBar) as ProgressBar).visibility = View.VISIBLE
+
+                //Send request
                 networkManager.getJSONResponse(
                     NetworkManager.getSearchURL(widgetStockName.text.toString()),
                     this
@@ -103,6 +113,10 @@ class StocksStonksWidgetConfigureActivity : NetworkCallback, Activity() {
     }
 
     override fun onFinished(jsonArray: JSONArray) {
+        //Hide Progressbar
+        (this.findViewById(R.id.progressBar) as ProgressBar).visibility = View.GONE
+
+        //Show results
         runOnUiThread { searchResultRecyclerViewAdapter.overrideSearchResults(
             SearchResults.parseSearchResponse(
                 jsonArray
@@ -112,6 +126,12 @@ class StocksStonksWidgetConfigureActivity : NetworkCallback, Activity() {
 
     override fun onError(error: VolleyError) {
         TODO("Not yet implemented")
+    }
+
+    fun Context.hideKeyboard() {
+        val view: View = currentFocus ?: View(this)
+        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
 }
