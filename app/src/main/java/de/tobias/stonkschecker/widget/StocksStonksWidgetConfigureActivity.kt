@@ -141,6 +141,11 @@ internal fun saveStockName(context: Context, appWidgetId: Int, ticker_symbol: St
     prefs.apply()
 }
 
+internal fun getStockName(context: Context, appWidgetId: Int): String? {
+    val prefs = context.getSharedPreferences(PREFS_NAME, 0)
+    return prefs.getString(PREF_PREFIX_KEY + appWidgetId, "")
+}
+
 internal fun deleteStockName(context: Context, appWidgetId: Int) {
     val prefs = context.getSharedPreferences(PREFS_NAME, 0).edit()
     prefs.remove(PREF_PREFIX_KEY + appWidgetId)
