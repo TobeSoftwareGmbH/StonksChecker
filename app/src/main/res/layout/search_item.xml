@@ -4,12 +4,19 @@
     android:layout_width="match_parent"
     android:layout_height="60dp"
     android:background="@drawable/list_item_border"
-    android:clipToPadding="true">
+    android:clickable="true"
+    android:clipToPadding="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <View
-        android:id="@+id/view2"
+        android:id="@+id/border"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/id"
