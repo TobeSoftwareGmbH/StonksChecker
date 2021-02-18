@@ -103,11 +103,11 @@ class StocksStonksWidgetConfigureActivity : NetworkCallback, Activity() {
     }
 
     override fun onFinished(jsonArray: JSONArray) {
-        StocksStonksWidgetConfigureActivity().searchResultRecyclerViewAdapter.overrideSearchResults(
+        runOnUiThread { searchResultRecyclerViewAdapter.overrideSearchResults(
             SearchResults.parseSearchResponse(
                 jsonArray
             ).searchItems
-        )
+        ) }
     }
 
     override fun onError(error: VolleyError) {
