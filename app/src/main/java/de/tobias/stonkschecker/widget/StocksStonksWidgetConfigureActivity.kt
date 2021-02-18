@@ -110,11 +110,11 @@ class StocksStonksWidgetConfigureActivity : NetworkCallback, SearchResultRecycle
     }
 
     override fun onListItemClick(searchResult: SearchResult) {
-        saveStockName(this, appWidgetId, searchResult.ticker_symbol)
+        saveStockData(this, appWidgetId, searchResult.ticker_symbol, searchResult.name)
 
         // It is the responsibility of the configuration activity to update the app widget
         val appWidgetManager = AppWidgetManager.getInstance(this)
-        updateAppWidget(this, appWidgetManager, appWidgetId)
+        StocksStonksWidget().updateAppWidget(this, appWidgetManager, appWidgetId)
 
         // Make sure we pass back the original appWidgetId
         val resultValue = Intent()
@@ -135,19 +135,31 @@ private const val PREFS_NAME = "de.tobias.stonkschecker.StocksStonksWidget"
 private const val PREF_PREFIX_KEY = "appwidget_"
 
 // Write the prefix to the SharedPreferences object for this widget
-internal fun saveStockName(context: Context, appWidgetId: Int, ticker_symbol: String) {
+internal fun saveStockData(context: Context, appWidgetId: Int, ticker_symbol: String, name: String) {
     val prefs = context.getSharedPreferences(PREFS_NAME, 0).edit()
     prefs.putString(PREF_PREFIX_KEY + appWidgetId, ticker_symbol)
+    prefs.putString(PREF_PREFIX_KEY + appWidgetId + "_name", name)
     prefs.apply()
 }
 
-internal fun getStockName(context: Context, appWidgetId: Int): String? {
+internal fun getTickerSymbol(context: Context, appWidgetId: Int): String {
     val prefs = context.getSharedPreferences(PREFS_NAME, 0)
-    return prefs.getString(PREF_PREFIX_KEY + appWidgetId, "")
+    return prefs.getString(PREF_PREFIX_KEY + appWidgetId, "")!!
 }
 
-internal fun deleteStockName(context: Context, appWidgetId: Int) {
+internal fun getStockName(context: Context, appWidgetId: Int): String {
+    val prefs = context.getSharedPreferences(PREFS_NAME, 0)
+    return prefs.getString(PREF_PREFIX_KEY + appWidgetId + "_name", "")!!
+}
+
+internal fun deleteStockData(context: Context, appWidgetId: Int) {
     val prefs = context.getSharedPreferences(PREFS_NAME, 0).edit()
     prefs.remove(PREF_PREFIX_KEY + appWidgetId)
+    prefs.remove(PREF_PREFIX_KEY + appWidgetId + "_name")
     prefs.apply()
+}
+
+internal fun isInitialised (context: Context, appWidgetId: Int) : Boolean {
+    val prefs = context.getSharedPreferences(PREFS_NAME, 0)
+    return prefs.contains(PREF_PREFIX_KEY + appWidgetId + "_name")
 }
