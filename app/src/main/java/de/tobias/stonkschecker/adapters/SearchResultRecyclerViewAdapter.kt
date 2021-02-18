@@ -9,10 +9,17 @@ import androidx.recyclerview.widget.RecyclerView
 import de.tobias.stonkschecker.R
 import de.tobias.stonkschecker.search.SearchResult
 
-class SearchResultRecyclerViewAdapter: RecyclerView.Adapter<SearchResultRecyclerViewAdapter.SearchResultViewHolder>() {
+class SearchResultRecyclerViewAdapter(val searchResultItemClickListener: SearchResultItemClickListener): RecyclerView.Adapter<SearchResultRecyclerViewAdapter.SearchResultViewHolder>() {
     private var results: ArrayList<SearchResult> = ArrayList()
 
-    class SearchResultViewHolder(view: View) :RecyclerView.ViewHolder(view) {
+    inner class SearchResultViewHolder(view: View) : View.OnClickListener, RecyclerView.ViewHolder(view) {
+        override fun onClick(p0: View?) {
+            val position = adapterPosition
+            searchResultItemClickListener.onListItemClick(results[position])
+        }
+        init {
+            view.setOnClickListener(this)
+        }
     }
 
     override fun onCreateViewHolder(
@@ -44,5 +51,9 @@ class SearchResultRecyclerViewAdapter: RecyclerView.Adapter<SearchResultRecycler
         results.addAll(newResults)
         notifyDataSetChanged()
         Log.v("RecyclerView", "New result size is: "+newResults.size)
+    }
+
+    interface SearchResultItemClickListener {
+        fun onListItemClick(searchResult: SearchResult)
     }
 }
