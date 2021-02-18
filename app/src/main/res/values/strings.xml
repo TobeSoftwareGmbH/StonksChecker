@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Stonks Checker</string>
-    <string name="appwidget_text">EXAMPLE</string>
-    <string name="configure">Configure</string>
     <string name="add_widget">Add widget</string>
+    <string name="title_configure">Configure Widget:</string>
+    <string name="desc_widget_configuration">Search for your stock, then select it in the list below!</string>
+    <string name="hint_search_term">Search term</string>
 </resources>

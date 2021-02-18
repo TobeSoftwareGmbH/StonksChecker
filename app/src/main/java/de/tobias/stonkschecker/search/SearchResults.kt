@@ -4,18 +4,28 @@ import android.util.Log
 import org.json.JSONArray
 import org.json.JSONObject
 
-class SearchResults (val searchGroup: ArrayList<SearchGroup>){
+class SearchResults (val searchGroup: ArrayList<SearchGroup>, val searchItems: ArrayList<SearchResult>){
 
     companion object {
         fun parseSearchResponse(jsonArray: JSONArray) : SearchResults {
-            var categories : ArrayList<SearchGroup> = ArrayList()
+            val categories : ArrayList<SearchGroup> = ArrayList()
+            val searchItems: ArrayList<SearchResult> = ArrayList()
 
             for(i in 0 until jsonArray.length()) {
                 val category: JSONObject = jsonArray.getJSONObject(i)
                 categories.add(SearchGroup.parseSearchGroup(category, i))
             }
 
-            return SearchResults(categories)
+            for (i in categories.indices) {
+                val group : SearchGroup = categories.get(i)
+                val results : ArrayList<SearchResult> = group.results
+
+                for (j in results.indices) {
+                    searchItems.add(results[j])
+                }
+            }
+
+            return SearchResults(categories, searchItems)
         }
     }
 
@@ -27,7 +37,7 @@ class SearchResults (val searchGroup: ArrayList<SearchGroup>){
 
             for (j in results.indices) {
                 val result: SearchResult = results[j]
-                Log.v(result.ticker_symbol, result.name)
+                Log.v(result.ticker_symbol, result.name + " " + result.value)
             }
         }
         return ""

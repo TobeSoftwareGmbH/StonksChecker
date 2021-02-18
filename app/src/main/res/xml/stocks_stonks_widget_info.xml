@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    android:configure="de.tobias.stonkschecker.StocksStonksWidgetConfigureActivity"
+    android:configure="de.tobias.stonkschecker.widget.StocksStonksWidgetConfigureActivity"
     android:initialKeyguardLayout="@layout/stocks_stonks_widget"
     android:initialLayout="@layout/stocks_stonks_widget"
     android:minWidth="240dp"

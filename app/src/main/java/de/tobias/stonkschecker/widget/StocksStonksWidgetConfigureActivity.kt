@@ -5,33 +5,35 @@ import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.ProgressBar
+import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.VolleyError
 import de.tobias.stonkschecker.R
+import de.tobias.stonkschecker.adapters.SearchResultRecyclerViewAdapter
+import de.tobias.stonkschecker.network.NetworkCallback
+import de.tobias.stonkschecker.network.NetworkManager
+import de.tobias.stonkschecker.search.SearchResult
+import de.tobias.stonkschecker.search.SearchResults
+import org.json.JSONArray
+
 
 /**
  * The configuration screen for the [StocksStonksWidget] AppWidget.
  */
-class StocksStonksWidgetConfigureActivity : Activity() {
+class StocksStonksWidgetConfigureActivity : NetworkCallback, SearchResultRecyclerViewAdapter.SearchResultItemClickListener,  Activity() {
     private var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
-    private lateinit var appWidgetText: EditText
-    private var onClickListener = View.OnClickListener {
-        val context = this@StocksStonksWidgetConfigureActivity
 
-        // When the button is clicked, store the string locally
-        val widgetText = appWidgetText.text.toString()
-        saveTitlePref(context, appWidgetId, widgetText)
+    private lateinit var widgetStockName: EditText
+    val searchResultRecyclerViewAdapter: SearchResultRecyclerViewAdapter = SearchResultRecyclerViewAdapter(this)
 
-        // It is the responsibility of the configuration activity to update the app widget
-        val appWidgetManager = AppWidgetManager.getInstance(context)
-        updateAppWidget(context, appWidgetManager, appWidgetId)
 
-        // Make sure we pass back the original appWidgetId
-        val resultValue = Intent()
-        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-        setResult(RESULT_OK, resultValue)
-        finish()
-    }
 
     public override fun onCreate(icicle: Bundle?) {
         super.onCreate(icicle)
@@ -41,8 +43,6 @@ class StocksStonksWidgetConfigureActivity : Activity() {
         setResult(RESULT_CANCELED)
 
         setContentView(R.layout.stocks_stonks_widget_configure)
-        appWidgetText = findViewById<View>(R.id.appwidget_text) as EditText
-        findViewById<View>(R.id.add_button).setOnClickListener(onClickListener)
 
         // Find the widget id from the intent.
         val intent = intent
@@ -62,27 +62,86 @@ class StocksStonksWidgetConfigureActivity : Activity() {
         //appWidgetText.setText(loadTitlePref(this@StocksStonksWidgetConfigureActivity, appWidgetId))
     }
 
+    override fun onStart() {
+        super.onStart()
+
+        val recyclerView : RecyclerView = findViewById(R.id.searchResultList)
+        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        recyclerView.layoutManager = layoutManager
+        recyclerView.adapter = searchResultRecyclerViewAdapter
+
+        val networkManager : NetworkManager = NetworkManager(this)
+
+        widgetStockName = findViewById<View>(R.id.appwidget_text) as EditText
+        widgetStockName.requestFocus()
+        widgetStockName.setOnEditorActionListener(TextView.OnEditorActionListener()
+        { textview: TextView, actionId: Int, keyevent: KeyEvent? ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                //Hide the keyboard
+                hideKeyboard()
+
+                //Display Progressbar
+                (this.findViewById(R.id.progressBar) as ProgressBar).visibility = View.VISIBLE
+
+                //Send request
+                networkManager.getJSONResponse(
+                    NetworkManager.getSearchURL(widgetStockName.text.toString()),
+                    this
+                )
+            }
+            return@OnEditorActionListener false
+        })
+    }
+
+    override fun onFinished(jsonArray: JSONArray) {
+        //Hide Progressbar
+        (this.findViewById(R.id.progressBar) as ProgressBar).visibility = View.GONE
+
+        //Show results
+        runOnUiThread { searchResultRecyclerViewAdapter.overrideSearchResults(
+            SearchResults.parseSearchResponse(
+                jsonArray
+            ).searchItems
+        ) }
+    }
+
+    override fun onError(error: VolleyError) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onListItemClick(searchResult: SearchResult) {
+        saveStockName(this, appWidgetId, searchResult.ticker_symbol)
+
+        // It is the responsibility of the configuration activity to update the app widget
+        val appWidgetManager = AppWidgetManager.getInstance(this)
+        updateAppWidget(this, appWidgetManager, appWidgetId)
+
+        // Make sure we pass back the original appWidgetId
+        val resultValue = Intent()
+        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+        setResult(RESULT_OK, resultValue)
+        finish()
+    }
+
+    fun Context.hideKeyboard() {
+        val view: View = currentFocus ?: View(this)
+        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
 }
 
 private const val PREFS_NAME = "de.tobias.stonkschecker.StocksStonksWidget"
 private const val PREF_PREFIX_KEY = "appwidget_"
 
 // Write the prefix to the SharedPreferences object for this widget
-internal fun saveTitlePref(context: Context, appWidgetId: Int, text: String) {
+internal fun saveStockName(context: Context, appWidgetId: Int, ticker_symbol: String) {
     val prefs = context.getSharedPreferences(PREFS_NAME, 0).edit()
-    prefs.putString(PREF_PREFIX_KEY + appWidgetId, text)
+    prefs.putString(PREF_PREFIX_KEY + appWidgetId, ticker_symbol)
     prefs.apply()
 }
 
-// Read the prefix from the SharedPreferences object for this widget.
-// If there is no preference saved, get the default from a resource
-internal fun loadTitlePref(context: Context, appWidgetId: Int): String {
-    val prefs = context.getSharedPreferences(PREFS_NAME, 0)
-    val titleValue = prefs.getString(PREF_PREFIX_KEY + appWidgetId, null)
-    return titleValue ?: context.getString(R.string.appwidget_text)
-}
-
-internal fun deleteTitlePref(context: Context, appWidgetId: Int) {
+internal fun deleteStockName(context: Context, appWidgetId: Int) {
     val prefs = context.getSharedPreferences(PREFS_NAME, 0).edit()
     prefs.remove(PREF_PREFIX_KEY + appWidgetId)
     prefs.apply()
