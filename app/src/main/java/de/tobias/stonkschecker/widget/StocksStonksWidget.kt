@@ -85,7 +85,7 @@ class StocksStonksWidget : NetworkCallback, AppWidgetProvider() {
         val intent = Intent(context, StocksStonksWidget::class.java)
         intent.action = "StonkReload"
         intent.putExtra("widgetId", appWidgetId)
-        return PendingIntent.getBroadcast(context, 0, intent, 0)
+        return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
     override fun onReceive(context: Context?, intent: Intent?) {
