@@ -28,7 +28,7 @@ class NetworkManager(context: Context) {
             { response ->
                 networkCallback.onFinished(JSONArray(response))
             },
-            { error -> TODO("ExceptionHandler not implemented") })
+            { error -> networkCallback.onError(error) })
 
         queue.add(stockRequest)
         return networkCallback

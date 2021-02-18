@@ -12,6 +12,7 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.VolleyError
 import de.tobias.stonkschecker.R
 import de.tobias.stonkschecker.adapters.SearchResultRecyclerViewAdapter
 import de.tobias.stonkschecker.network.NetworkCallback
@@ -23,7 +24,7 @@ import org.json.JSONArray
 /**
  * The configuration screen for the [StocksStonksWidget] AppWidget.
  */
-class StocksStonksWidgetConfigureActivity : Activity() {
+class StocksStonksWidgetConfigureActivity : NetworkCallback, Activity() {
     private var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
 
     private lateinit var widgetStockName: EditText
@@ -94,24 +95,25 @@ class StocksStonksWidgetConfigureActivity : Activity() {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 networkManager.getJSONResponse(
                     NetworkManager.getSearchURL(widgetStockName.text.toString()),
-                    SearchReturnValues()
+                    this
                 )
             }
             return@OnEditorActionListener false
         })
     }
 
-}
-
-internal class SearchReturnValues: NetworkCallback {
     override fun onFinished(jsonArray: JSONArray) {
-        //Log.v("RESULT", jsonArray.toString())
         StocksStonksWidgetConfigureActivity().searchResultRecyclerViewAdapter.overrideSearchResults(
             SearchResults.parseSearchResponse(
                 jsonArray
             ).searchItems
         )
     }
+
+    override fun onError(error: VolleyError) {
+        TODO("Not yet implemented")
+    }
+
 }
 
 private const val PREFS_NAME = "de.tobias.stonkschecker.StocksStonksWidget"
