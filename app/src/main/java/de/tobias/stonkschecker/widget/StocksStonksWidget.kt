@@ -22,7 +22,6 @@ import org.json.JSONArray
 class StocksStonksWidget : NetworkCallback, AppWidgetProvider() {
     private lateinit var context: Context
     private lateinit var appWidgetManager: AppWidgetManager
-    private var appWidgetId = 0 //lateinit is not allowed, initialising with random value
 
     override fun onUpdate(
         context: Context,
@@ -54,12 +53,18 @@ class StocksStonksWidget : NetworkCallback, AppWidgetProvider() {
         // Construct the RemoteViews object
         val views = RemoteViews(context.packageName, R.layout.stocks_stonks_widget)
 
+        //Parse stock and get stonk State
         val stock: Stock = Stock.getStockData(jsonArray)
         val stonkState: Int = stock.getStonkState()
 
+        //Get appWidgetId
+        val appWidgetId = getWidgetIdFromTickerSymbol(context, stock.name)
+
+        //Update Layout text
         views.setViewVisibility(R.id.widget_loading, View.GONE)
         views.setTextViewText(R.id.stock_name, getStockName(context, appWidgetId) + ":")
 
+        //Set image accordingly
         if(stonkState == Stock.STONKS) {
             views.setImageViewResource(R.id.img_stonks, R.drawable.stonks)
         } else if (stonkState == Stock.NOT_STONKS) {
@@ -102,7 +107,6 @@ class StocksStonksWidget : NetworkCallback, AppWidgetProvider() {
     ) {
         this.context = context
         this.appWidgetManager = appWidgetManager
-        this.appWidgetId = appWidgetId
 
         if(!isInitialised(context, appWidgetId)) return //This function is also called when the user adds the widget for the first time. At that stage, the request is ignored
 
@@ -112,6 +116,7 @@ class StocksStonksWidget : NetworkCallback, AppWidgetProvider() {
             R.id.img_reload,
             getPendingSelfIntent(context, appWidgetId)
         );
+        views.setTextViewText(R.id.stock_name, context.getString(R.string.loading_widget))
         appWidgetManager.updateAppWidget(appWidgetId, views)
 
         val tickerName = getTickerSymbol(context, appWidgetId)

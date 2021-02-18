@@ -2,6 +2,7 @@ package de.tobias.stonkschecker.widget
 
 import android.app.Activity
 import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -31,7 +32,9 @@ class StocksStonksWidgetConfigureActivity : NetworkCallback, SearchResultRecycle
     private var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
 
     private lateinit var widgetStockName: EditText
-    val searchResultRecyclerViewAdapter: SearchResultRecyclerViewAdapter = SearchResultRecyclerViewAdapter(this)
+    val searchResultRecyclerViewAdapter: SearchResultRecyclerViewAdapter = SearchResultRecyclerViewAdapter(
+        this
+    )
 
 
 
@@ -134,6 +137,20 @@ class StocksStonksWidgetConfigureActivity : NetworkCallback, SearchResultRecycle
 private const val PREFS_NAME = "de.tobias.stonkschecker.StocksStonksWidget"
 private const val PREF_PREFIX_KEY = "appwidget_"
 
+internal fun getWidgetIdFromTickerSymbol(context: Context, ticker_symbol: String) : Int {
+    val prefs = context.getSharedPreferences(PREFS_NAME, 0)
+
+    //Get all widget ids
+    val name = ComponentName(context, StocksStonksWidget::class.java)
+    val ids = AppWidgetManager.getInstance(context).getAppWidgetIds(name)
+
+    for (i in ids.indices) {
+        if(prefs.getString(PREF_PREFIX_KEY + ids[i], "").equals(ticker_symbol)) return ids[i]
+    }
+
+    throw IllegalStateException("No Widget ID found matching ticker symbol $ticker_symbol")
+}
+
 // Write the prefix to the SharedPreferences object for this widget
 internal fun saveStockData(context: Context, appWidgetId: Int, ticker_symbol: String, name: String) {
     val prefs = context.getSharedPreferences(PREFS_NAME, 0).edit()
@@ -159,7 +176,7 @@ internal fun deleteStockData(context: Context, appWidgetId: Int) {
     prefs.apply()
 }
 
-internal fun isInitialised (context: Context, appWidgetId: Int) : Boolean {
+internal fun isInitialised(context: Context, appWidgetId: Int) : Boolean {
     val prefs = context.getSharedPreferences(PREFS_NAME, 0)
     return prefs.contains(PREF_PREFIX_KEY + appWidgetId + "_name")
 }
