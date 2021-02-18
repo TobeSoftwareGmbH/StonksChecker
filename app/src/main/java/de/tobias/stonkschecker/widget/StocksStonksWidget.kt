@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
 import com.android.volley.VolleyError
@@ -83,20 +84,22 @@ class StocksStonksWidget : NetworkCallback, AppWidgetProvider() {
 
     private fun getPendingSelfIntent(context: Context, appWidgetId: Int): PendingIntent? {
         val intent = Intent(context, StocksStonksWidget::class.java)
-        intent.action = "StonkReload"
-        intent.putExtra("widgetId", appWidgetId)
+        intent.action = appWidgetId.toString()
         return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
     override fun onReceive(context: Context?, intent: Intent?) {
         super.onReceive(context, intent)
-        if(intent != null && context != null && intent.action.equals("StonkReload")) {
-            updateAppWidget(
-                context, AppWidgetManager.getInstance(context), intent.getIntExtra(
-                    "widgetId",
-                    0
+        if(intent != null && context != null) {
+            Log.v("Widget", "Update Intent received")
+            try {
+                val appWidgetId: Int = intent.action!!.toInt()
+                updateAppWidget(
+                    context, AppWidgetManager.getInstance(context), appWidgetId
                 )
-            )
+            } catch (e: NumberFormatException) {
+                //In this case, this intent is not about updating a widget. Ignoring.
+            }
         }
     }
 
