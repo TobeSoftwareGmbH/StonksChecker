@@ -5,4 +5,6 @@
     <string name="desc_widget_configuration">Search for your stock, then select it in the list below!</string>
     <string name="hint_search_term">Search term</string>
     <string name="loading_widget">Loading...</string>
+    <string name="title_no_widgets">Your number of widgets: Not Stonks!</string>
+    <string name="desc_no_widgets">Use your Launcher of choice to add a widget to your homescreen</string>
 </resources>
