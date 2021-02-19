@@ -1,5 +1,5 @@
 <p align="center">
- <img width="8%" src="/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" align="center" alt="StonksChecker Logo" />
+ <img width="10%" src="/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" align="center" alt="StonksChecker Logo" />
  <h1 align="center">StonksChecker</h1>
  <p align="center">An Android App that changes the meme (Stonks, Not Stonks, Confused Stonks) of a widget depending on the state of the tracked stock. Absolutely perfect for successful investors and those who want to be.</p>
 </p>
