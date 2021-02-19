@@ -37,6 +37,7 @@ class StocksStonksWidgetConfigureActivity : NetworkCallback, SearchResultRecycle
 
 
     public override fun onCreate(icicle: Bundle?) {
+        setTheme(R.style.AppTheme)
         super.onCreate(icicle)
 
         // Set the result to CANCELED.  This will cause the widget host to cancel
