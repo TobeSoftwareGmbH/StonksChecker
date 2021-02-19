@@ -8,20 +8,24 @@
 
     <ImageView
         android:id="@+id/img_stonks"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:layout_marginTop="0dp"
-        android:scaleType="fitXY"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
         android:src="@drawable/stonks" />
 
     <TextView
         android:id="@+id/stock_name"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/img_stonks"
+        android:layout_alignTop="@+id/img_stonks"
+        android:layout_alignEnd="@+id/img_stonks"
         android:fontFamily="sans-serif-black"
         android:gravity="center"
-        android:text="GameStop:"
+        android:text="@string/loading_widget"
         android:textColor="#FFFFFF"
         android:textSize="24sp" />
 
@@ -29,10 +33,10 @@
         android:id="@+id/img_reload"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="0dp"
-        android:layout_marginBottom="0dp"
+        android:layout_alignEnd="@+id/img_stonks"
+        android:layout_alignBottom="@+id/img_stonks"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
         android:src="@drawable/ic_reload" />
 
     <ProgressBar
