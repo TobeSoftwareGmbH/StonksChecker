@@ -32,9 +32,7 @@ class StocksStonksWidgetConfigureActivity : NetworkCallback, SearchResultRecycle
     private var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
 
     private lateinit var widgetStockName: EditText
-    val searchResultRecyclerViewAdapter: SearchResultRecyclerViewAdapter = SearchResultRecyclerViewAdapter(
-        this
-    )
+    val searchResultRecyclerViewAdapter: SearchResultRecyclerViewAdapter = SearchResultRecyclerViewAdapter(this, this)
 
 
 
