@@ -22,12 +22,12 @@
                 android:resource="@xml/stocks_stonks_widget_info" />
         </receiver>
 
-        <activity android:name=".widget.StocksStonksWidgetConfigureActivity" android:theme="@style/Theme.AppCompat.Light">
+        <activity android:name=".widget.StocksStonksWidgetConfigureActivity" android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity" android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

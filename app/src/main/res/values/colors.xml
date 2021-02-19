@@ -8,4 +8,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="listItemBorder">#5a5a5a</color>
+
+    <color name="colorPrimary">#568fc3</color>
+    <color name="colorPrimaryDark">#041c98</color>
+    <color name="colorAccent">#ed7721</color>
 </resources>
