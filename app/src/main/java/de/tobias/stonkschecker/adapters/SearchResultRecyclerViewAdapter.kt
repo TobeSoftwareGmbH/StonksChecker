@@ -27,9 +27,6 @@ class SearchResultRecyclerViewAdapter(val searchResultItemClickListener: SearchR
         }
         init {
             view.setOnClickListener(this)
-            (view.findViewById(R.id.current_value) as TextView).setOnClickListener(this)
-            (view.findViewById(R.id.name) as TextView).setOnClickListener(this)
-            (view.findViewById(R.id.id) as TextView).setOnClickListener(this)
         }
 
         fun animateView() {
