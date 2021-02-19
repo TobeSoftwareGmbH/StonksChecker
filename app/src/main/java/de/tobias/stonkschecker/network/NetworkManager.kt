@@ -12,7 +12,7 @@ class NetworkManager(context: Context) {
 
     companion object {
         fun getSearchURL(query: String): String {
-            return "https://search.bloomberg.com/lookup.json?types=Company_Public,Index,Fund,Currency,Commodity,Bond&exclude_subtypes=label:editorial&group_size=3,3,3,3,3,3,3,3,6&fields=name,slug,ticker_symbol,url,organization,title,primary_site&highlight=1&query=$query"
+            return "https://search.bloomberg.com/lookup.json?types=Company_Public,Index,Fund,Currency,Commodity,Bond&exclude_subtypes=label:editorial&group_size=6,3,3,3,3,3,3,3,6&fields=name,slug,ticker_symbol,url,organization,title,primary_site&highlight=1&query=$query"
         }
 
         fun getStockURL(stockName: String): String {

@@ -22,7 +22,7 @@
                 android:resource="@xml/stocks_stonks_widget_info" />
         </receiver>
 
-        <activity android:name=".widget.StocksStonksWidgetConfigureActivity">
+        <activity android:name=".widget.StocksStonksWidgetConfigureActivity" android:theme="@style/Theme.AppCompat.Light">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
