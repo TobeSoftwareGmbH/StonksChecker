@@ -10,7 +10,7 @@
     <a href="https://codeclimate.com/github/TobeSoftwareGmbH/StonksChecker/maintainability">
       <img src="https://api.codeclimate.com/v1/badges/08bc32d8a8dac2bc2910/maintainability" />
     </a>
-    <a href="https://travis-ci.com/TobeSoftwareGmbH/StonksChecker">
+    <a href="https://travis-ci.com/TobeSoftwareGmbH/SecretHitlerMobileCompanion">
       <img src="https://travis-ci.com/TobeSoftwareGmbH/StonksChecker.svg?branch=main" />
     </a>
   </p>
