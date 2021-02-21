@@ -2,7 +2,6 @@ package de.tobias.stonkschecker.widget
 
 import android.app.Activity
 import android.appwidget.AppWidgetManager
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.KeyEvent
@@ -31,7 +30,7 @@ class StocksStonksWidgetConfigureActivity : NetworkCallback, SearchResultRecycle
     private var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
 
     private lateinit var widgetStockName: EditText
-    val searchResultRecyclerViewAdapter: SearchResultRecyclerViewAdapter = SearchResultRecyclerViewAdapter(this, this)
+    private val searchResultRecyclerViewAdapter: SearchResultRecyclerViewAdapter = SearchResultRecyclerViewAdapter(this, this)
 
 
 
@@ -66,17 +65,20 @@ class StocksStonksWidgetConfigureActivity : NetworkCallback, SearchResultRecycle
     override fun onStart() {
         super.onStart()
 
+        //Setup the recyclerView
         val recyclerView : RecyclerView = findViewById(R.id.searchResultList)
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = searchResultRecyclerViewAdapter
 
-        val networkManager : NetworkManager = NetworkManager(this)
+        //Initialise the networkManager class
+        val networkManager  = NetworkManager(this)
 
+        //Set up EditText listener and make the keyboard pop up by requesting focus for it
         widgetStockName = findViewById<View>(R.id.appwidget_text) as EditText
         widgetStockName.requestFocus()
-        widgetStockName.setOnEditorActionListener(TextView.OnEditorActionListener()
-        { textview: TextView, actionId: Int, keyevent: KeyEvent? ->
+        widgetStockName.setOnEditorActionListener(TextView.OnEditorActionListener() //called when the user hits the search button on their keyboard
+        { _: TextView, actionId: Int, _: KeyEvent? ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 //Hide the keyboard
                 hideKeyboard()
@@ -94,6 +96,7 @@ class StocksStonksWidgetConfigureActivity : NetworkCallback, SearchResultRecycle
         })
     }
 
+    //The network request has been returned by Volley
     override fun onFinished(jsonArray: JSONArray) {
         //Hide Progressbar
         (this.findViewById(R.id.progressBar) as ProgressBar).visibility = View.GONE
@@ -110,6 +113,7 @@ class StocksStonksWidgetConfigureActivity : NetworkCallback, SearchResultRecycle
         TODO("Not yet implemented")
     }
 
+    //Called by the RecyclerView.Adapter when the user selects and item in the results list
     override fun onListItemClick(searchResult: SearchResult) {
         WidgetManager.saveStockData(this, appWidgetId, searchResult.ticker_symbol, searchResult.name)
 
@@ -117,16 +121,16 @@ class StocksStonksWidgetConfigureActivity : NetworkCallback, SearchResultRecycle
         val appWidgetManager = AppWidgetManager.getInstance(this)
         StocksStonksWidget().updateAppWidget(this, appWidgetManager, appWidgetId)
 
-        // Make sure we pass back the original appWidgetId
+        // Make sure we pass back the original appWidgetId in our intent
         val resultValue = Intent()
         resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
         setResult(RESULT_OK, resultValue)
         finish()
     }
 
-    fun Context.hideKeyboard() {
+    private fun hideKeyboard() {
         val view: View = currentFocus ?: View(this)
-        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
