@@ -2,7 +2,6 @@ package de.tobias.stonkschecker.widget
 
 import android.app.Activity
 import android.appwidget.AppWidgetManager
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -112,7 +111,7 @@ class StocksStonksWidgetConfigureActivity : NetworkCallback, SearchResultRecycle
     }
 
     override fun onListItemClick(searchResult: SearchResult) {
-        saveStockData(this, appWidgetId, searchResult.ticker_symbol, searchResult.name)
+        WidgetManager.saveStockData(this, appWidgetId, searchResult.ticker_symbol, searchResult.name)
 
         // It is the responsibility of the configuration activity to update the app widget
         val appWidgetManager = AppWidgetManager.getInstance(this)
@@ -131,51 +130,4 @@ class StocksStonksWidgetConfigureActivity : NetworkCallback, SearchResultRecycle
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-}
-
-private const val PREFS_NAME = "de.tobias.stonkschecker.StocksStonksWidget"
-private const val PREF_PREFIX_KEY = "appwidget_"
-
-internal fun getWidgetIdFromTickerSymbol(context: Context, ticker_symbol: String) : Int {
-    val prefs = context.getSharedPreferences(PREFS_NAME, 0)
-
-    //Get all widget ids
-    val name = ComponentName(context, StocksStonksWidget::class.java)
-    val ids = AppWidgetManager.getInstance(context).getAppWidgetIds(name)
-
-    for (i in ids.indices) {
-        if(prefs.getString(PREF_PREFIX_KEY + ids[i], "").equals(ticker_symbol)) return ids[i]
-    }
-
-    throw IllegalStateException("No Widget ID found matching ticker symbol $ticker_symbol")
-}
-
-// Write the prefix to the SharedPreferences object for this widget
-internal fun saveStockData(context: Context, appWidgetId: Int, ticker_symbol: String, name: String) {
-    val prefs = context.getSharedPreferences(PREFS_NAME, 0).edit()
-    prefs.putString(PREF_PREFIX_KEY + appWidgetId, ticker_symbol)
-    prefs.putString(PREF_PREFIX_KEY + appWidgetId + "_name", name)
-    prefs.apply()
-}
-
-internal fun getTickerSymbol(context: Context, appWidgetId: Int): String {
-    val prefs = context.getSharedPreferences(PREFS_NAME, 0)
-    return prefs.getString(PREF_PREFIX_KEY + appWidgetId, "")!!
-}
-
-internal fun getStockName(context: Context, appWidgetId: Int): String {
-    val prefs = context.getSharedPreferences(PREFS_NAME, 0)
-    return prefs.getString(PREF_PREFIX_KEY + appWidgetId + "_name", "")!!
-}
-
-internal fun deleteStockData(context: Context, appWidgetId: Int) {
-    val prefs = context.getSharedPreferences(PREFS_NAME, 0).edit()
-    prefs.remove(PREF_PREFIX_KEY + appWidgetId)
-    prefs.remove(PREF_PREFIX_KEY + appWidgetId + "_name")
-    prefs.apply()
-}
-
-internal fun isInitialised(context: Context, appWidgetId: Int) : Boolean {
-    val prefs = context.getSharedPreferences(PREFS_NAME, 0)
-    return prefs.contains(PREF_PREFIX_KEY + appWidgetId + "_name")
 }
