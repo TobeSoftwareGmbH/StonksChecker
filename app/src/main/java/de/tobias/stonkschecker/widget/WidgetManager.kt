@@ -9,12 +9,16 @@ class WidgetManager {
         private const val PREFS_NAME = "de.tobias.stonkschecker.StocksStonksWidget"
         private const val PREF_PREFIX_KEY = "appwidget_"
 
+        fun getWidgetIds(context: Context) : IntArray {
+            val name = ComponentName(context, StocksStonksWidget::class.java)
+            return AppWidgetManager.getInstance(context).getAppWidgetIds(name)
+        }
+
         fun getWidgetIdFromTickerSymbol(context: Context, ticker_symbol: String) : Int {
             val prefs = context.getSharedPreferences(PREFS_NAME, 0)
 
             //Get all widget ids
-            val name = ComponentName(context, StocksStonksWidget::class.java)
-            val ids = AppWidgetManager.getInstance(context).getAppWidgetIds(name)
+            val ids = getWidgetIds(context)
 
             for (i in ids.indices) {
                 if(prefs.getString(PREF_PREFIX_KEY + ids[i], "").equals(ticker_symbol)) return ids[i]
