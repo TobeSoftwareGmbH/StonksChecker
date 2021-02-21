@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
 
         //Get all widget ids
-        val widgetIds = WidgetManager.getWidgetIds(this)
+        val widgetIds = WidgetManager.getActiveWidgetIds(this)
         if (widgetIds.isEmpty()) { //No widgets added, display a message to the user
             findViewById<View>(R.id.container_no_widgets).visibility = View.VISIBLE
             findViewById<View>(R.id.container_widget_overview).visibility = View.GONE

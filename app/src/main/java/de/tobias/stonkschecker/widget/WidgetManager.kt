@@ -9,9 +9,21 @@ class WidgetManager {
         private const val PREFS_NAME = "de.tobias.stonkschecker.StocksStonksWidget"
         private const val PREF_PREFIX_KEY = "appwidget_"
 
+        //Retrieves all widget ids associated with this app
         fun getWidgetIds(context: Context) : IntArray {
             val name = ComponentName(context, StocksStonksWidget::class.java)
             return AppWidgetManager.getInstance(context).getAppWidgetIds(name)
+        }
+
+        //Retrieves all widget ids, but discards the ids of non-existing widgets
+        fun getActiveWidgetIds(context: Context) : IntArray {
+            val ids = getWidgetIds(context)
+            val activeIds = ArrayList<Int>()
+            for (id in ids) {
+                if(isInitialised(context, id)) activeIds.add(id)
+            }
+
+            return activeIds.toIntArray()
         }
 
         fun getWidgetIdFromTickerSymbol(context: Context, ticker_symbol: String) : Int {
