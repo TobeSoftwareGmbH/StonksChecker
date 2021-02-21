@@ -8,12 +8,12 @@
 
     <ImageView
         android:id="@+id/img_stonks"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_marginTop="0dp"
         android:adjustViewBounds="true"
-        android:scaleType="centerCrop"
+        android:scaleType="fitStart"
         android:src="@drawable/stonks" />
 
     <TextView
