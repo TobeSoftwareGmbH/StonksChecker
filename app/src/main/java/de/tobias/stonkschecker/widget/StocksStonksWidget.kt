@@ -38,7 +38,7 @@ class StocksStonksWidget : NetworkCallback, AppWidgetProvider() {
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
         // When the user deletes the widget, delete the preference associated with it.
         for (appWidgetId in appWidgetIds) {
-            deleteStockData(context, appWidgetId)
+            WidgetManager.deleteStockData(context, appWidgetId)
         }
     }
 
@@ -59,11 +59,11 @@ class StocksStonksWidget : NetworkCallback, AppWidgetProvider() {
         val stonkState: Int = stock.getStonkState()
 
         //Get appWidgetId
-        val appWidgetId = getWidgetIdFromTickerSymbol(context, stock.name)
+        val appWidgetId = WidgetManager.getWidgetIdFromTickerSymbol(context, stock.name)
 
         //Update Layout text
         views.setViewVisibility(R.id.widget_loading, View.GONE)
-        views.setTextViewText(R.id.stock_name, getStockName(context, appWidgetId) + ":")
+        views.setTextViewText(R.id.stock_name, WidgetManager.getStockName(context, appWidgetId) + ":")
 
         //Set image accordingly
         if(stonkState == Stock.STONKS) {
@@ -111,7 +111,7 @@ class StocksStonksWidget : NetworkCallback, AppWidgetProvider() {
         this.context = context
         this.appWidgetManager = appWidgetManager
 
-        if(!isInitialised(context, appWidgetId)) return //This function is also called when the user adds the widget for the first time. At that stage, the request is ignored
+        if(!WidgetManager.isInitialised(context, appWidgetId)) return //This function is also called when the user adds the widget for the first time. At that stage, the request is ignored
 
         val views = RemoteViews(context.packageName, R.layout.stocks_stonks_widget)
         views.setViewVisibility(R.id.widget_loading, View.VISIBLE)
@@ -122,7 +122,7 @@ class StocksStonksWidget : NetworkCallback, AppWidgetProvider() {
         views.setTextViewText(R.id.stock_name, context.getString(R.string.loading_widget))
         appWidgetManager.updateAppWidget(appWidgetId, views)
 
-        val tickerName = getTickerSymbol(context, appWidgetId)
+        val tickerName = WidgetManager.getTickerSymbol(context, appWidgetId)
         val networkManager = NetworkManager(context)
         networkManager.getJSONResponse(NetworkManager.getStockURL(tickerName), this)
     }
