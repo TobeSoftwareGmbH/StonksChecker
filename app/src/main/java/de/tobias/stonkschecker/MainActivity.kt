@@ -12,18 +12,21 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        super.onResume()
 
         //Get all widget ids
         val widgetIds = WidgetManager.getActiveWidgetIds(this)
         if (widgetIds.isEmpty()) { //No widgets added, display a message to the user
-            findViewById<View>(R.id.container_no_widgets).visibility = View.VISIBLE
-            findViewById<View>(R.id.container_widget_overview).visibility = View.GONE
+            toggleNoWidgetsMessage(true)
         } else { //Widgets added, show an overview to the user
-            findViewById<View>(R.id.container_no_widgets).visibility = View.GONE
-            findViewById<View>(R.id.container_widget_overview).visibility = View.VISIBLE
+            toggleNoWidgetsMessage(false)
         }
+    }
+
+    private fun toggleNoWidgetsMessage (show: Boolean) {
+        findViewById<View>(R.id.container_no_widgets).visibility = if(show) View.VISIBLE else View.GONE
+        findViewById<View>(R.id.container_widget_overview).visibility = if(show) View.GONE else View.VISIBLE
     }
 
 }
