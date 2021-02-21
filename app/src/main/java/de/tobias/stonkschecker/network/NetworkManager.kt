@@ -1,6 +1,7 @@
 package de.tobias.stonkschecker.network
 
 import android.content.Context
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.StringRequest
@@ -29,6 +30,10 @@ class NetworkManager(context: Context) {
                 networkCallback.onFinished(JSONArray(response))
             },
             { error -> networkCallback.onError(error) })
+        stockRequest.retryPolicy =
+            DefaultRetryPolicy(10000,
+            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
 
         queue.add(stockRequest)
         return networkCallback
