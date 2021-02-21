@@ -84,7 +84,7 @@ class StocksStonksWidgetConfigureActivity : NetworkCallback, SearchResultRecycle
                 hideKeyboard()
 
                 //Display Progressbar
-                (this.findViewById(R.id.progressBar) as ProgressBar).visibility = View.VISIBLE
+                findViewById<ProgressBar>(R.id.progressBar).visibility = View.VISIBLE
 
                 //Send request
                 networkManager.getJSONResponse(
@@ -99,7 +99,7 @@ class StocksStonksWidgetConfigureActivity : NetworkCallback, SearchResultRecycle
     //The network request has been returned by Volley
     override fun onFinished(jsonArray: JSONArray) {
         //Hide Progressbar
-        (this.findViewById(R.id.progressBar) as ProgressBar).visibility = View.GONE
+        findViewById<ProgressBar>(R.id.progressBar).visibility = View.GONE
 
         //Show results
         runOnUiThread { searchResultRecyclerViewAdapter.overrideSearchResults(
