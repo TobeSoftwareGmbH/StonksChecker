@@ -13,7 +13,7 @@
         android:layout_centerInParent="true"
         android:layout_marginTop="0dp"
         android:adjustViewBounds="true"
-        android:scaleType="fitStart"
+        android:scaleType="centerCrop"
         android:src="@drawable/stonks" />
 
     <TextView
