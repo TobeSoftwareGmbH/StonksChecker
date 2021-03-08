@@ -7,9 +7,9 @@
     <a href="https://snyk.io/test/github/TobeSoftwareGmbH/StonksChecker?targetFile=app/build.gradle">
         <img src="https://snyk.io/test/github/TobeSoftwareGmbH/StonksChecker/badge.svg?targetFile=app/build.gradle" alt="Known Vulnerabilities" data-canonical-src="https://snyk.io/test/github/TobeSoftwareGmbH/StonksChecker?targetFile=app/build.gradle" style="max-width:100%;">
     </a>
-    <a href="https://codeclimate.com/github/TobeSoftwareGmbH/StonksChecker/maintainability">
-      <img src="https://api.codeclimate.com/v1/badges/08bc32d8a8dac2bc2910/maintainability" />
-    </a>
+    <a href="https://codeclimate.com/github/kammt/StonksChecker/maintainability">
+      <img src="https://api.codeclimate.com/v1/badges/414152d683962a378382/maintainability" />
+   </a>
     <a href="https://travis-ci.com/kammt/StonksChecker">
       <img src="https://travis-ci.com/kammt/StonksChecker.svg?branch=main" />
     </a>
