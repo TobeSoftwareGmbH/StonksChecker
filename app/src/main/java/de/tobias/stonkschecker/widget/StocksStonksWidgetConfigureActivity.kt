@@ -1,15 +1,12 @@
 package de.tobias.stonkschecker.widget
 
 import android.app.ActivityOptions
-import android.app.AlarmManager
 import android.appwidget.AppWidgetManager
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
-import android.os.SystemClock
 import android.transition.Slide
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -169,12 +166,7 @@ class StocksStonksWidgetConfigureActivity :  AppCompatActivity() {
             )
 
             val interval = resources.getIntArray(R.array.update_intervals_ms)[update_interval]
-            (getSystemService(Context.ALARM_SERVICE) as AlarmManager).setInexactRepeating(
-                AlarmManager.ELAPSED_REALTIME,
-                SystemClock.elapsedRealtime() + interval,
-                interval.toLong(),
-                StocksStonksWidget.getPendingSelfIntent(this, appWidgetId)
-            )
+            StocksStonksWidget.setupPeriodicUpdate(this, interval, appWidgetId)
 
             // It is the responsibility of the configuration activity to update the app widget
             val appWidgetManager = AppWidgetManager.getInstance(this)

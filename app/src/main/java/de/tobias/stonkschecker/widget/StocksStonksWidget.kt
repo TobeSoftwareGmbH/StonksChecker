@@ -1,10 +1,12 @@
 package de.tobias.stonkschecker.widget
 
+import android.app.AlarmManager
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
+import android.os.SystemClock
 import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
@@ -88,6 +90,15 @@ class StocksStonksWidget : NetworkCallback, AppWidgetProvider() {
             val intent = Intent(context, StocksStonksWidget::class.java)
             intent.action = appWidgetId.toString()
             return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        }
+
+        fun setupPeriodicUpdate(context: Context, interval: Int, appWidgetId: Int) {
+            (context.getSystemService(Context.ALARM_SERVICE) as AlarmManager).setInexactRepeating(
+                AlarmManager.ELAPSED_REALTIME,
+                SystemClock.elapsedRealtime() + interval,
+                interval.toLong(),
+                StocksStonksWidget.getPendingSelfIntent(context, appWidgetId)
+            )
         }
     }
 
