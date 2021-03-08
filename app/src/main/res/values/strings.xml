@@ -14,4 +14,6 @@
     <string name="title_stock_name">Stock Name</string>
     <string name="title_update_interval">Update Interval</string>
     <string name="message_missing_entries">Missing information, please check your inputs!</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
 </resources>

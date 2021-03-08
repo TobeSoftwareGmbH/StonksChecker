@@ -2,18 +2,22 @@ package de.tobias.stonkschecker.widget
 
 import android.app.ActivityOptions
 import android.appwidget.AppWidgetManager
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.transition.Slide
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.textfield.TextInputEditText
 import de.tobias.stonkschecker.R
 import kotlin.random.Random
 
@@ -84,7 +88,21 @@ class StocksStonksWidgetConfigureActivity :  AppCompatActivity() {
         }
 
         findViewById<ConstraintLayout>(R.id.settings_container_name).setOnClickListener {
-            TODO()
+            val inputFieldLayout = LayoutInflater.from(this).inflate(R.layout.material_input_dialog, null, false)
+            val inputField = inputFieldLayout.findViewById<TextInputEditText>(R.id.stock_name_input)
+            inputField.requestFocus()
+            inputField.setText(stock_name)
+
+            MaterialAlertDialogBuilder(this)
+                .setView(inputFieldLayout)
+                .setNegativeButton(getString(R.string.cancel), DialogInterface.OnClickListener { dialogInterface, _ ->  dialogInterface.dismiss() })
+                .setPositiveButton(getString(R.string.ok), DialogInterface.OnClickListener { dialogInterface, i ->
+                    val newName = inputField.text.toString()
+                    stock_name = newName
+                    findViewById<TextView>(R.id.value_stock_name).text = newName
+                    findViewById<TextView>(R.id.stock_title_preview).text = newName + ":"
+                    dialogInterface.dismiss()})
+                .show()
         }
 
         findViewById<ConstraintLayout>(R.id.settings_container_update_interval).setOnClickListener {
