@@ -10,8 +10,10 @@ import android.transition.Slide
 import android.view.Gravity
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import de.tobias.stonkschecker.R
 import kotlin.random.Random
 
@@ -23,9 +25,9 @@ class StocksStonksWidgetConfigureActivity :  AppCompatActivity() {
     private var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
     private val requestCode = Random.nextInt(5000, 50000)
 
-    private lateinit var ticker_name: String;
-    private lateinit var ticker_symbol: String;
-    private lateinit var stock_name: String;
+    private var ticker_name: String? = null
+    private var ticker_symbol: String? = null
+    private var stock_name: String? = null
 
     public override fun onCreate(icicle: Bundle?) {
         setTheme(R.style.AppTheme_WidgetConfiguration)
@@ -61,7 +63,7 @@ class StocksStonksWidgetConfigureActivity :  AppCompatActivity() {
 
     private fun setAnimation() {
         val slide = Slide()
-        slide.slideEdge = Gravity.LEFT
+        slide.slideEdge = Gravity.START
         slide.duration = 400
         slide.interpolator = AccelerateDecelerateInterpolator()
         window.exitTransition = slide
@@ -81,18 +83,30 @@ class StocksStonksWidgetConfigureActivity :  AppCompatActivity() {
             )
         }
 
+        findViewById<ConstraintLayout>(R.id.settings_container_name).setOnClickListener {
+            TODO()
+        }
+
+        findViewById<ConstraintLayout>(R.id.settings_container_update_interval).setOnClickListener {
+            TODO("Not implemented yet")
+        }
+
+
         if(resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES) //When dark mode is enable by the user, the gray background of the widget preview is set to be darker
             findViewById<ConstraintLayout>(R.id.widget_preview).setBackgroundColor(
                 Color.DKGRAY)
+
+        findViewById<FloatingActionButton>(R.id.fab_done).setOnClickListener { submitWidgetData() }
     }
 
     private fun setStock(ticker_symbol: String, name: String) {
         this.ticker_symbol = ticker_symbol
         this.ticker_name = name
+        this.stock_name = name
 
         findViewById<TextView>(R.id.value_stock_name).text = name
         findViewById<TextView>(R.id.value_tracked_stock).text = name
-        findViewById<TextView>(R.id.stock_title_preview).text = name
+        findViewById<TextView>(R.id.stock_title_preview).text = name + ":"
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -103,23 +117,29 @@ class StocksStonksWidgetConfigureActivity :  AppCompatActivity() {
         }
     }
 
-    fun saveData() {
-        WidgetManager.saveStockData(
-            this,
-            appWidgetId,
-            "",//searchResult.ticker_symbol,
-            ""//searchResult.name
-        )
+    private fun submitWidgetData() {
+        if(stock_name == null || ticker_name == null || ticker_symbol == null) {
+            //Values are not set, handle error
+            Toast.makeText(this, getString(R.string.message_missing_entries), Toast.LENGTH_LONG).show()
+            return
+        } else {
+            WidgetManager.saveStockData(
+                this,
+                appWidgetId,
+                ticker_symbol!!,
+                stock_name!!
+            )
 
-        // It is the responsibility of the configuration activity to update the app widget
-        val appWidgetManager = AppWidgetManager.getInstance(this)
-        StocksStonksWidget().updateAppWidget(this, appWidgetManager, appWidgetId)
+            // It is the responsibility of the configuration activity to update the app widget
+            val appWidgetManager = AppWidgetManager.getInstance(this)
+            StocksStonksWidget().updateAppWidget(this, appWidgetManager, appWidgetId)
 
-        // Make sure we pass back the original appWidgetId in our intent
-        val resultValue = Intent()
-        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-        setResult(RESULT_OK, resultValue)
-        finish()
+            // Make sure we pass back the original appWidgetId in our intent
+            val resultValue = Intent()
+            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+            setResult(RESULT_OK, resultValue)
+            finish()
+        }
     }
 
 }
