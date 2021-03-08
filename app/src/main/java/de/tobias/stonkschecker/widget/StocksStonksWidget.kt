@@ -105,17 +105,25 @@ class StocksStonksWidget : NetworkCallback, AppWidgetProvider() {
     override fun onReceive(context: Context?, intent: Intent?) {
         super.onReceive(context, intent)
         if(intent != null && context != null) {
-            Log.v("Widget", "Update Intent received")
-            try {
-                val appWidgetId: Int = intent.action!!.toInt()
-                updateAppWidget(
-                    context, AppWidgetManager.getInstance(context), appWidgetId
-                )
-            } catch (e: NumberFormatException) {
-                //In this case, this intent is not about updating a widget. Ignoring.
+            if(intent.action == Intent.ACTION_BOOT_COMPLETED) {
+                Log.v("Widget", "Boot completed, reactivating all update schedules")
+                for(id in WidgetManager.getActiveWidgetIds(context)) {
+                    setupPeriodicUpdate(context, WidgetManager.getUpdateInterval(context, id), id)
+                }
+            } else {
+                Log.v("Widget", "Update Intent received")
+                try {
+                    val appWidgetId: Int = intent.action!!.toInt()
+                    updateAppWidget(
+                        context, AppWidgetManager.getInstance(context), appWidgetId
+                    )
+                } catch (e: NumberFormatException) {
+                    //In this case, this intent is not about updating a widget. Ignoring.
+                }
             }
         }
     }
+
 
     internal fun updateAppWidget(
         context: Context,

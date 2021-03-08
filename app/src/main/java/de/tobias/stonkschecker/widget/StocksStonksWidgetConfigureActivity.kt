@@ -33,6 +33,7 @@ class StocksStonksWidgetConfigureActivity :  AppCompatActivity() {
     private var tickerSymbol: String? = null
     private var stockName: String? = null
     private var updateInterval = 1
+    private var updateIntervalMS = 360000
 
     public override fun onCreate(icicle: Bundle?) {
         setTheme(R.style.AppTheme_WidgetConfiguration)
@@ -131,6 +132,7 @@ class StocksStonksWidgetConfigureActivity :  AppCompatActivity() {
 
     private fun setUpdateInterval(listItem: Int) {
         updateInterval = listItem
+        updateIntervalMS = resources.getIntArray(R.array.update_intervals_ms)[listItem]
         findViewById<TextView>(R.id.value_update_interval).text = resources.getTextArray(R.array.update_intervals)[listItem]
     }
 
@@ -163,11 +165,10 @@ class StocksStonksWidgetConfigureActivity :  AppCompatActivity() {
                 appWidgetId,
                 tickerSymbol!!,
                 stockName!!,
-                updateInterval
+                updateIntervalMS
             )
 
-            val interval = resources.getIntArray(R.array.update_intervals_ms)[updateInterval]
-            if(interval != 0) StocksStonksWidget.setupPeriodicUpdate(this, interval, appWidgetId) //0 = do not update automatically
+            if(updateIntervalMS != 0) StocksStonksWidget.setupPeriodicUpdate(this, updateIntervalMS, appWidgetId) //0 = do not update automatically
 
             // It is the responsibility of the configuration activity to update the app widget
             val appWidgetManager = AppWidgetManager.getInstance(this)

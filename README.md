@@ -20,6 +20,7 @@
 - **Dark Mode** - Because that's what all the cool kids use, right?
 - **Minimal permissions used.** The following permissions are required:
   - *INTERNET* - To be able to communicate with Bloomberg Markets
+  - *RECEIVE_BOOT_COMPLETED* - To be able to reschedule all widget refreshes when the device reboots
 - **Free and Open-Source** - Licensed under the GPLv3-license
   
 ## Screenshots
@@ -27,7 +28,6 @@
 
 ## State of the App
 This app is currently in alpha stage. While the main features are currently working, some work is still needed to make it fully functional. The following features are planned:
-- Automatically Refreshing the widgets
 - Editing widgets after adding them
 - Stonks/Not Stonks based on a provided Stock value (e.g. the value you bought the stock at)
 
