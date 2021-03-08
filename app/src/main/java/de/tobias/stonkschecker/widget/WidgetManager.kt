@@ -40,10 +40,11 @@ class WidgetManager {
         }
 
         // Write the prefix to the SharedPreferences object for this widget
-        fun saveStockData(context: Context, appWidgetId: Int, ticker_symbol: String, name: String) {
+        fun saveStockData(context: Context, appWidgetId: Int, ticker_symbol: String, name: String, updateInterval: Int) {
             val prefs = context.getSharedPreferences(PREFS_NAME, 0).edit()
             prefs.putString(PREF_PREFIX_KEY + appWidgetId, ticker_symbol)
             prefs.putString(PREF_PREFIX_KEY + appWidgetId + "_name", name)
+            prefs.putInt(PREF_PREFIX_KEY + appWidgetId + "_interval", updateInterval)
             prefs.apply()
         }
 
@@ -57,10 +58,16 @@ class WidgetManager {
             return prefs.getString(PREF_PREFIX_KEY + appWidgetId + "_name", "")!!
         }
 
+        fun getUpdateInterval(context: Context, appWidgetId: Int): Int {
+            val prefs = context.getSharedPreferences(PREFS_NAME, 0)
+            return prefs.getInt(PREF_PREFIX_KEY + appWidgetId + "_interval", 0)
+        }
+
         fun deleteStockData(context: Context, appWidgetId: Int) {
             val prefs = context.getSharedPreferences(PREFS_NAME, 0).edit()
             prefs.remove(PREF_PREFIX_KEY + appWidgetId)
             prefs.remove(PREF_PREFIX_KEY + appWidgetId + "_name")
+            prefs.remove(PREF_PREFIX_KEY + appWidgetId + "_interval")
             prefs.apply()
         }
 

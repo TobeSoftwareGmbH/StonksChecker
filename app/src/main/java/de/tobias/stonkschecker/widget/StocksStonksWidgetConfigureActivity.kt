@@ -29,10 +29,10 @@ class StocksStonksWidgetConfigureActivity :  AppCompatActivity() {
     private var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
     private val requestCode = Random.nextInt(5000, 50000)
 
-    private var ticker_name: String? = null
-    private var ticker_symbol: String? = null
-    private var stock_name: String? = null
-    private var update_interval = 0
+    private var tickerName: String? = null
+    private var tickerSymbol: String? = null
+    private var stockName: String? = null
+    private var updateInterval = 1
 
     public override fun onCreate(icicle: Bundle?) {
         setTheme(R.style.AppTheme_WidgetConfiguration)
@@ -108,14 +108,14 @@ class StocksStonksWidgetConfigureActivity :  AppCompatActivity() {
         val inputFieldLayout = LayoutInflater.from(this).inflate(R.layout.material_input_dialog, null, false)
         val inputField = inputFieldLayout.findViewById<TextInputEditText>(R.id.stock_name_input)
         inputField.requestFocus()
-        inputField.setText(stock_name)
+        inputField.setText(stockName)
 
         MaterialAlertDialogBuilder(this)
             .setView(inputFieldLayout)
             .setNegativeButton(getString(R.string.cancel), DialogInterface.OnClickListener { dialogInterface, _ ->  dialogInterface.dismiss() })
             .setPositiveButton(getString(R.string.ok), DialogInterface.OnClickListener { dialogInterface, i ->
                 val newName = inputField.text.toString()
-                stock_name = newName
+                stockName = newName
                 findViewById<TextView>(R.id.value_stock_name).text = newName
                 findViewById<TextView>(R.id.stock_title_preview).text = newName + ":"
                 dialogInterface.dismiss()})
@@ -130,14 +130,14 @@ class StocksStonksWidgetConfigureActivity :  AppCompatActivity() {
     }
 
     private fun setUpdateInterval(listItem: Int) {
-        update_interval = listItem
+        updateInterval = listItem
         findViewById<TextView>(R.id.value_update_interval).text = resources.getTextArray(R.array.update_intervals)[listItem]
     }
 
     private fun setStock(ticker_symbol: String, name: String) {
-        this.ticker_symbol = ticker_symbol
-        this.ticker_name = name
-        this.stock_name = name
+        this.tickerSymbol = ticker_symbol
+        this.tickerName = name
+        this.stockName = name
 
         findViewById<TextView>(R.id.value_stock_name).text = name
         findViewById<TextView>(R.id.value_tracked_stock).text = name
@@ -153,7 +153,7 @@ class StocksStonksWidgetConfigureActivity :  AppCompatActivity() {
     }
 
     private fun submitWidgetData() {
-        if(stock_name == null || ticker_name == null || ticker_symbol == null) {
+        if(stockName == null || tickerName == null || tickerSymbol == null) {
             //Values are not set, handle error
             Toast.makeText(this, getString(R.string.message_missing_entries), Toast.LENGTH_LONG).show()
             return
@@ -161,12 +161,13 @@ class StocksStonksWidgetConfigureActivity :  AppCompatActivity() {
             WidgetManager.saveStockData(
                 this,
                 appWidgetId,
-                ticker_symbol!!,
-                stock_name!!
+                tickerSymbol!!,
+                stockName!!,
+                updateInterval
             )
 
-            val interval = resources.getIntArray(R.array.update_intervals_ms)[update_interval]
-            StocksStonksWidget.setupPeriodicUpdate(this, interval, appWidgetId)
+            val interval = resources.getIntArray(R.array.update_intervals_ms)[updateInterval]
+            if(interval != 0) StocksStonksWidget.setupPeriodicUpdate(this, interval, appWidgetId) //0 = do not update automatically
 
             // It is the responsibility of the configuration activity to update the app widget
             val appWidgetManager = AppWidgetManager.getInstance(this)

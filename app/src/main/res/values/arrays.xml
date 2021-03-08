@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="update_intervals">
+        <item>@string/interval_never</item>
         <item>@string/value_default</item>
         <item>@string/interval_30min</item>
         <item>@string/interval_1H</item>
@@ -9,6 +10,7 @@
         <item>@string/interval_24H</item>
     </array>
     <array name="update_intervals_ms">
+        <item>0</item>
         <item>360000</item>
         <item>30000</item>
         <item>60000</item>
