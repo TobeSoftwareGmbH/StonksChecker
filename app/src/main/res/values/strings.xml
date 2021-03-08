@@ -1,10 +1,16 @@
 <resources>
     <string name="app_name">Stonks Checker</string>
     <string name="add_widget">Add widget</string>
-    <string name="title_configure">Configure Widget:</string>
+    <string name="title_configure">Configure Widget</string>
     <string name="desc_widget_configuration">Search for your stock, then select it in the list below!</string>
     <string name="hint_search_term">Search term</string>
     <string name="loading_widget">Loading...</string>
     <string name="title_no_widgets">Your number of widgets: Not Stonks!</string>
     <string name="desc_no_widgets">Use your Launcher of choice to add a widget to your homescreen</string>
+    <string name="stock_name_default">Stock Name:</string>
+    <string name="value_not_set">Not Set</string>
+    <string name="title_tracked_stock">Tracked Stock</string>
+    <string name="value_default">Default value</string>
+    <string name="title_stock_name">Stock Name</string>
+    <string name="title_update_interval">Update Interval</string>
 </resources>
