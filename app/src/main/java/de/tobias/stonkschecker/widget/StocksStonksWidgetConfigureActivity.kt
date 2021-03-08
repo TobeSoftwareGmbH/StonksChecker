@@ -1,42 +1,43 @@
 package de.tobias.stonkschecker.widget
 
-import android.app.Activity
+import android.app.ActivityOptions
 import android.appwidget.AppWidgetManager
+import android.content.DialogInterface
 import android.content.Intent
+import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Bundle
-import android.view.KeyEvent
-import android.view.View
-import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.ProgressBar
+import android.transition.Slide
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.TextView
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.android.volley.VolleyError
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.textfield.TextInputEditText
 import de.tobias.stonkschecker.R
-import de.tobias.stonkschecker.adapters.SearchResultRecyclerViewAdapter
-import de.tobias.stonkschecker.network.NetworkCallback
-import de.tobias.stonkschecker.network.NetworkManager
-import de.tobias.stonkschecker.search.SearchResult
-import de.tobias.stonkschecker.search.SearchResults
-import org.json.JSONArray
+import kotlin.random.Random
 
 
 /**
  * The configuration screen for the [StocksStonksWidget] AppWidget.
  */
-class StocksStonksWidgetConfigureActivity : NetworkCallback, SearchResultRecyclerViewAdapter.SearchResultItemClickListener,  Activity() {
+class StocksStonksWidgetConfigureActivity :  AppCompatActivity() {
     private var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
+    private val requestCode = Random.nextInt(5000, 50000)
 
-    private lateinit var widgetStockName: EditText
-    private val searchResultRecyclerViewAdapter: SearchResultRecyclerViewAdapter = SearchResultRecyclerViewAdapter(this, this)
-
-
+    private var ticker_name: String? = null
+    private var ticker_symbol: String? = null
+    private var stock_name: String? = null
 
     public override fun onCreate(icicle: Bundle?) {
-        setTheme(R.style.AppTheme)
+        setTheme(R.style.AppTheme_WidgetConfiguration)
         super.onCreate(icicle)
+
+        setAnimation()
 
         // Set the result to CANCELED.  This will cause the widget host to cancel
         // out of the widget placement if the user presses the back button.
@@ -59,79 +60,108 @@ class StocksStonksWidgetConfigureActivity : NetworkCallback, SearchResultRecycle
             return
         }
 
+        title = getString(R.string.title_configure)
+
         //appWidgetText.setText(loadTitlePref(this@StocksStonksWidgetConfigureActivity, appWidgetId))
+    }
+
+    private fun setAnimation() {
+        val slide = Slide()
+        slide.slideEdge = Gravity.START
+        slide.duration = 400
+        slide.interpolator = AccelerateDecelerateInterpolator()
+        window.exitTransition = slide
+        window.enterTransition = slide
     }
 
     override fun onStart() {
         super.onStart()
 
-        //Setup the recyclerView
-        val recyclerView : RecyclerView = findViewById(R.id.searchResultList)
-        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        recyclerView.layoutManager = layoutManager
-        recyclerView.adapter = searchResultRecyclerViewAdapter
+        findViewById<ConstraintLayout>(R.id.settings_container_stock).setOnClickListener {
+            val options = ActivityOptions.makeSceneTransitionAnimation(this)
+            startActivityForResult(
+                Intent(
+                    this,
+                    StockSearchActivity::class.java
+                ), requestCode, options.toBundle()
+            )
+        }
 
-        //Initialise the networkManager class
-        val networkManager  = NetworkManager(this)
+        findViewById<ConstraintLayout>(R.id.settings_container_name).setOnClickListener {
+            showNameInputDialog()
+        }
 
-        //Set up EditText listener and make the keyboard pop up by requesting focus for it
-        widgetStockName = findViewById<View>(R.id.appwidget_text) as EditText
-        widgetStockName.requestFocus()
-        widgetStockName.setOnEditorActionListener(TextView.OnEditorActionListener() //called when the user hits the search button on their keyboard
-        { _: TextView, actionId: Int, _: KeyEvent? ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                //Hide the keyboard
-                hideKeyboard()
+        findViewById<ConstraintLayout>(R.id.settings_container_update_interval).setOnClickListener {
+            TODO("Not implemented yet")
+        }
 
-                //Display Progressbar
-                findViewById<ProgressBar>(R.id.progressBar).visibility = View.VISIBLE
 
-                //Send request
-                networkManager.getJSONResponse(
-                    NetworkManager.getSearchURL(widgetStockName.text.toString()),
-                    this
-                )
-            }
-            return@OnEditorActionListener false
-        })
+        if(resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES) //When dark mode is enable by the user, the gray background of the widget preview is set to be darker
+            findViewById<ConstraintLayout>(R.id.widget_preview).setBackgroundColor(
+                Color.DKGRAY)
+
+        findViewById<FloatingActionButton>(R.id.fab_done).setOnClickListener { submitWidgetData() }
     }
 
-    //The network request has been returned by Volley
-    override fun onFinished(jsonArray: JSONArray) {
-        //Hide Progressbar
-        findViewById<ProgressBar>(R.id.progressBar).visibility = View.GONE
+    private fun showNameInputDialog() {
+        val inputFieldLayout = LayoutInflater.from(this).inflate(R.layout.material_input_dialog, null, false)
+        val inputField = inputFieldLayout.findViewById<TextInputEditText>(R.id.stock_name_input)
+        inputField.requestFocus()
+        inputField.setText(stock_name)
 
-        //Show results
-        runOnUiThread { searchResultRecyclerViewAdapter.overrideSearchResults(
-            SearchResults.parseSearchResponse(
-                jsonArray
-            ).searchItems
-        ) }
+        MaterialAlertDialogBuilder(this)
+            .setView(inputFieldLayout)
+            .setNegativeButton(getString(R.string.cancel), DialogInterface.OnClickListener { dialogInterface, _ ->  dialogInterface.dismiss() })
+            .setPositiveButton(getString(R.string.ok), DialogInterface.OnClickListener { dialogInterface, i ->
+                val newName = inputField.text.toString()
+                stock_name = newName
+                findViewById<TextView>(R.id.value_stock_name).text = newName
+                findViewById<TextView>(R.id.stock_title_preview).text = newName + ":"
+                dialogInterface.dismiss()})
+            .show()
     }
 
-    override fun onError(error: VolleyError) {
-        TODO("Not yet implemented")
+    private fun setStock(ticker_symbol: String, name: String) {
+        this.ticker_symbol = ticker_symbol
+        this.ticker_name = name
+        this.stock_name = name
+
+        findViewById<TextView>(R.id.value_stock_name).text = name
+        findViewById<TextView>(R.id.value_tracked_stock).text = name
+        findViewById<TextView>(R.id.stock_title_preview).text = name + ":"
     }
 
-    //Called by the RecyclerView.Adapter when the user selects and item in the results list
-    override fun onListItemClick(searchResult: SearchResult) {
-        WidgetManager.saveStockData(this, appWidgetId, searchResult.ticker_symbol, searchResult.name)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
 
-        // It is the responsibility of the configuration activity to update the app widget
-        val appWidgetManager = AppWidgetManager.getInstance(this)
-        StocksStonksWidget().updateAppWidget(this, appWidgetManager, appWidgetId)
-
-        // Make sure we pass back the original appWidgetId in our intent
-        val resultValue = Intent()
-        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-        setResult(RESULT_OK, resultValue)
-        finish()
+        if(requestCode == this.requestCode && resultCode == RESULT_OK && data != null) {
+            setStock(data.getStringExtra("ticker")!!, data.getStringExtra("name")!!)
+        }
     }
 
-    private fun hideKeyboard() {
-        val view: View = currentFocus ?: View(this)
-        val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    private fun submitWidgetData() {
+        if(stock_name == null || ticker_name == null || ticker_symbol == null) {
+            //Values are not set, handle error
+            Toast.makeText(this, getString(R.string.message_missing_entries), Toast.LENGTH_LONG).show()
+            return
+        } else {
+            WidgetManager.saveStockData(
+                this,
+                appWidgetId,
+                ticker_symbol!!,
+                stock_name!!
+            )
+
+            // It is the responsibility of the configuration activity to update the app widget
+            val appWidgetManager = AppWidgetManager.getInstance(this)
+            StocksStonksWidget().updateAppWidget(this, appWidgetManager, appWidgetId)
+
+            // Make sure we pass back the original appWidgetId in our intent
+            val resultValue = Intent()
+            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+            setResult(RESULT_OK, resultValue)
+            finish()
+        }
     }
 
 }

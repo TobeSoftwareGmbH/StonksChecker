@@ -79,7 +79,8 @@ class StocksStonksWidget : NetworkCallback, AppWidgetProvider() {
     }
 
     override fun onError(error: VolleyError) {
-        TODO("Not yet implemented")
+        error.printStackTrace()
+        //TODO("Not implemented")
     }
 
     private fun getPendingSelfIntent(context: Context, appWidgetId: Int): PendingIntent? {
@@ -118,7 +119,7 @@ class StocksStonksWidget : NetworkCallback, AppWidgetProvider() {
         views.setOnClickPendingIntent(
             R.id.img_reload,
             getPendingSelfIntent(context, appWidgetId)
-        );
+        )
         views.setTextViewText(R.id.stock_name, context.getString(R.string.loading_widget))
         appWidgetManager.updateAppWidget(appWidgetId, views)
 
