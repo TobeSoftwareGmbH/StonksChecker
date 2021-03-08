@@ -3,14 +3,17 @@ package de.tobias.stonkschecker.widget
 import android.app.ActivityOptions
 import android.appwidget.AppWidgetManager
 import android.content.Intent
+import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Bundle
 import android.transition.Slide
-import android.util.Log
 import android.view.Gravity
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import de.tobias.stonkschecker.R
+import kotlin.random.Random
 
 
 /**
@@ -18,7 +21,11 @@ import de.tobias.stonkschecker.R
  */
 class StocksStonksWidgetConfigureActivity :  AppCompatActivity() {
     private var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
+    private val requestCode = Random.nextInt(5000, 50000)
 
+    private lateinit var ticker_name: String;
+    private lateinit var ticker_symbol: String;
+    private lateinit var stock_name: String;
 
     public override fun onCreate(icicle: Bundle?) {
         setTheme(R.style.AppTheme_WidgetConfiguration)
@@ -52,7 +59,7 @@ class StocksStonksWidgetConfigureActivity :  AppCompatActivity() {
         //appWidgetText.setText(loadTitlePref(this@StocksStonksWidgetConfigureActivity, appWidgetId))
     }
 
-    fun setAnimation() {
+    private fun setAnimation() {
         val slide = Slide()
         slide.slideEdge = Gravity.LEFT
         slide.duration = 400
@@ -66,15 +73,34 @@ class StocksStonksWidgetConfigureActivity :  AppCompatActivity() {
 
         findViewById<ConstraintLayout>(R.id.settings_container_stock).setOnClickListener {
             val options = ActivityOptions.makeSceneTransitionAnimation(this)
-            startActivity(
+            startActivityForResult(
                 Intent(
                     this,
                     StockSearchActivity::class.java
-                ), options.toBundle()
+                ), requestCode, options.toBundle()
             )
-            Log.v("WidgetConfig", "Starting Stock Search Activity")
         }
 
+        if(resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES) //When dark mode is enable by the user, the gray background of the widget preview is set to be darker
+            findViewById<ConstraintLayout>(R.id.widget_preview).setBackgroundColor(
+                Color.DKGRAY)
+    }
+
+    private fun setStock(ticker_symbol: String, name: String) {
+        this.ticker_symbol = ticker_symbol
+        this.ticker_name = name
+
+        findViewById<TextView>(R.id.value_stock_name).text = name
+        findViewById<TextView>(R.id.value_tracked_stock).text = name
+        findViewById<TextView>(R.id.stock_title_preview).text = name
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(requestCode == this.requestCode && resultCode == RESULT_OK && data != null) {
+            setStock(data.getStringExtra("ticker")!!, data.getStringExtra("name")!!)
+        }
     }
 
     fun saveData() {

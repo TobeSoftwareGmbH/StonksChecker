@@ -11,7 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.StonksChecker">
-        <activity android:name=".widget.StockSearchActivity"></activity>
+        <activity android:name=".widget.StockSearchActivity" android:theme="@style/AppTheme"/>
 
         <uses-library
             android:name="org.apache.http.legacy"

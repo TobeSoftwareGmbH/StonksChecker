@@ -1,5 +1,7 @@
 package de.tobias.stonkschecker.widget
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
@@ -79,13 +81,23 @@ class StockSearchActivity : AppCompatActivity(), NetworkCallback, SearchResultRe
         ) }
     }
 
+    override fun onBackPressed() {
+        setResult(Activity.RESULT_CANCELED)
+        super.onBackPressed()
+    }
+
     override fun onError(error: VolleyError) {
         TODO("Not yet implemented")
     }
 
     //Called by the RecyclerView.Adapter when the user selects and item in the results list
     override fun onListItemClick(searchResult: SearchResult) {
-        TODO("Not implemented")
+        val data = Intent()
+        data.putExtra("ticker", searchResult.ticker_symbol)
+        data.putExtra("name", searchResult.name)
+
+        setResult(Activity.RESULT_OK, data)
+        super.onBackPressed() //Simulating a back-button press, since finish() would not show the slide animation
     }
 
     private fun hideKeyboard() {
