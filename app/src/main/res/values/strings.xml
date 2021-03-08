@@ -16,4 +16,9 @@
     <string name="message_missing_entries">Missing information, please check your inputs!</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
+    <string name="interval_30min">30 min</string>
+    <string name="interval_1H">1 Hr</string>
+    <string name="interval_6H">6 Hrs</string>
+    <string name="interval_12H">12 Hrs</string>
+    <string name="interval_24H">24 Hrs</string>
 </resources>

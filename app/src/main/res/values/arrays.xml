@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="update_intervals">
+        <item>@string/value_default</item>
+        <item>@string/interval_30min</item>
+        <item>@string/interval_1H</item>
+        <item>@string/interval_6H</item>
+        <item>@string/interval_12H</item>
+        <item>@string/interval_24H</item>
+    </array>
+</resources>
