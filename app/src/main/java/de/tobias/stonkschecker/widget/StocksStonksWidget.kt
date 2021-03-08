@@ -108,7 +108,8 @@ class StocksStonksWidget : NetworkCallback, AppWidgetProvider() {
             if(intent.action == Intent.ACTION_BOOT_COMPLETED) {
                 Log.v("Widget", "Boot completed, reactivating all update schedules")
                 for(id in WidgetManager.getActiveWidgetIds(context)) {
-                    setupPeriodicUpdate(context, WidgetManager.getUpdateInterval(context, id), id)
+                    val updateInterval: Int = WidgetManager.getUpdateInterval(context, id)
+                    if(updateInterval != 0) setupPeriodicUpdate(context, updateInterval, id)
                 }
             } else {
                 Log.v("Widget", "Update Intent received")
