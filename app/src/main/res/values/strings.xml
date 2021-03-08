@@ -10,7 +10,7 @@
     <string name="stock_name_default">Stock Name:</string>
     <string name="value_not_set">Not Set</string>
     <string name="title_tracked_stock">Tracked Stock</string>
-    <string name="value_default">Default value</string>
+    <string name="value_default">Default value (6 Hrs)</string>
     <string name="title_stock_name">Stock Name</string>
     <string name="title_update_interval">Update Interval</string>
     <string name="message_missing_entries">Missing information, please check your inputs!</string>

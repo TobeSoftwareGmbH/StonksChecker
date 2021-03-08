@@ -83,10 +83,12 @@ class StocksStonksWidget : NetworkCallback, AppWidgetProvider() {
         //TODO("Not implemented")
     }
 
-    private fun getPendingSelfIntent(context: Context, appWidgetId: Int): PendingIntent? {
-        val intent = Intent(context, StocksStonksWidget::class.java)
-        intent.action = appWidgetId.toString()
-        return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+    companion object {
+        fun getPendingSelfIntent(context: Context, appWidgetId: Int): PendingIntent? {
+            val intent = Intent(context, StocksStonksWidget::class.java)
+            intent.action = appWidgetId.toString()
+            return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        }
     }
 
     override fun onReceive(context: Context?, intent: Intent?) {
