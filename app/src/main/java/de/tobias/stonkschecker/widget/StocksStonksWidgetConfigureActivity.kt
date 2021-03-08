@@ -1,6 +1,5 @@
 package de.tobias.stonkschecker.widget
 
-import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.Intent
 import android.os.Bundle
@@ -8,9 +7,8 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.VolleyError
@@ -26,7 +24,7 @@ import org.json.JSONArray
 /**
  * The configuration screen for the [StocksStonksWidget] AppWidget.
  */
-class StocksStonksWidgetConfigureActivity : NetworkCallback, SearchResultRecyclerViewAdapter.SearchResultItemClickListener,  Activity() {
+class StocksStonksWidgetConfigureActivity : NetworkCallback, SearchResultRecyclerViewAdapter.SearchResultItemClickListener,  AppCompatActivity() {
     private var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
 
     private lateinit var widgetStockName: EditText
@@ -58,6 +56,8 @@ class StocksStonksWidgetConfigureActivity : NetworkCallback, SearchResultRecycle
             finish()
             return
         }
+
+        title = getString(R.string.title_configure)
 
         //appWidgetText.setText(loadTitlePref(this@StocksStonksWidgetConfigureActivity, appWidgetId))
     }
