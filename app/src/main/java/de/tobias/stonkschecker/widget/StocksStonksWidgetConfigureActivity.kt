@@ -88,21 +88,7 @@ class StocksStonksWidgetConfigureActivity :  AppCompatActivity() {
         }
 
         findViewById<ConstraintLayout>(R.id.settings_container_name).setOnClickListener {
-            val inputFieldLayout = LayoutInflater.from(this).inflate(R.layout.material_input_dialog, null, false)
-            val inputField = inputFieldLayout.findViewById<TextInputEditText>(R.id.stock_name_input)
-            inputField.requestFocus()
-            inputField.setText(stock_name)
-
-            MaterialAlertDialogBuilder(this)
-                .setView(inputFieldLayout)
-                .setNegativeButton(getString(R.string.cancel), DialogInterface.OnClickListener { dialogInterface, _ ->  dialogInterface.dismiss() })
-                .setPositiveButton(getString(R.string.ok), DialogInterface.OnClickListener { dialogInterface, i ->
-                    val newName = inputField.text.toString()
-                    stock_name = newName
-                    findViewById<TextView>(R.id.value_stock_name).text = newName
-                    findViewById<TextView>(R.id.stock_title_preview).text = newName + ":"
-                    dialogInterface.dismiss()})
-                .show()
+            showNameInputDialog()
         }
 
         findViewById<ConstraintLayout>(R.id.settings_container_update_interval).setOnClickListener {
@@ -115,6 +101,24 @@ class StocksStonksWidgetConfigureActivity :  AppCompatActivity() {
                 Color.DKGRAY)
 
         findViewById<FloatingActionButton>(R.id.fab_done).setOnClickListener { submitWidgetData() }
+    }
+
+    private fun showNameInputDialog() {
+        val inputFieldLayout = LayoutInflater.from(this).inflate(R.layout.material_input_dialog, null, false)
+        val inputField = inputFieldLayout.findViewById<TextInputEditText>(R.id.stock_name_input)
+        inputField.requestFocus()
+        inputField.setText(stock_name)
+
+        MaterialAlertDialogBuilder(this)
+            .setView(inputFieldLayout)
+            .setNegativeButton(getString(R.string.cancel), DialogInterface.OnClickListener { dialogInterface, _ ->  dialogInterface.dismiss() })
+            .setPositiveButton(getString(R.string.ok), DialogInterface.OnClickListener { dialogInterface, i ->
+                val newName = inputField.text.toString()
+                stock_name = newName
+                findViewById<TextView>(R.id.value_stock_name).text = newName
+                findViewById<TextView>(R.id.stock_title_preview).text = newName + ":"
+                dialogInterface.dismiss()})
+            .show()
     }
 
     private fun setStock(ticker_symbol: String, name: String) {
