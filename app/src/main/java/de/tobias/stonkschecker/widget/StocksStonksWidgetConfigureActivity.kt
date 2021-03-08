@@ -32,6 +32,7 @@ class StocksStonksWidgetConfigureActivity :  AppCompatActivity() {
     private var ticker_name: String? = null
     private var ticker_symbol: String? = null
     private var stock_name: String? = null
+    private var update_interval = 0
 
     public override fun onCreate(icicle: Bundle?) {
         setTheme(R.style.AppTheme_WidgetConfiguration)
@@ -92,7 +93,7 @@ class StocksStonksWidgetConfigureActivity :  AppCompatActivity() {
         }
 
         findViewById<ConstraintLayout>(R.id.settings_container_update_interval).setOnClickListener {
-            TODO("Not implemented yet")
+            showUpdateIntervalDialog()
         }
 
 
@@ -119,6 +120,18 @@ class StocksStonksWidgetConfigureActivity :  AppCompatActivity() {
                 findViewById<TextView>(R.id.stock_title_preview).text = newName + ":"
                 dialogInterface.dismiss()})
             .show()
+    }
+
+    private fun showUpdateIntervalDialog() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(getString(R.string.title_update_interval))
+            .setItems(resources.getTextArray(R.array.update_intervals), { dialogInterface, item ->  setUpdateInterval(item)})
+            .show()
+    }
+
+    private fun setUpdateInterval(listItem: Int) {
+        update_interval = listItem
+        findViewById<TextView>(R.id.value_update_interval).text = resources.getTextArray(R.array.update_intervals)[listItem]
     }
 
     private fun setStock(ticker_symbol: String, name: String) {
