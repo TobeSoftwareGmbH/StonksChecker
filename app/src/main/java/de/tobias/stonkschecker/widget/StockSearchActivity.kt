@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.VolleyError
+import com.google.android.material.textfield.TextInputEditText
 import de.tobias.stonkschecker.R
 import de.tobias.stonkschecker.adapters.SearchResultRecyclerViewAdapter
 import de.tobias.stonkschecker.network.NetworkCallback
@@ -46,7 +47,7 @@ class StockSearchActivity : AppCompatActivity(), NetworkCallback, SearchResultRe
         val networkManager  = NetworkManager(this)
 
         //Set up EditText listener and make the keyboard pop up by requesting focus for it
-        widgetStockName = findViewById<View>(R.id.appwidget_text) as EditText
+        widgetStockName = findViewById<TextInputEditText>(R.id.stock_name_input)
         widgetStockName.requestFocus()
         widgetStockName.setOnEditorActionListener(
             TextView.OnEditorActionListener() //called when the user hits the search button on their keyboard
